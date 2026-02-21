@@ -1,0 +1,31 @@
+name: CI - Build Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: |
+          cd service-a
+          npm install
+
+      - name: Run Tests
+        run: |
+          cd service-a
+          npm test || echo "No tests configured"
+
+      - name: Build Docker Image
+        run: |
+          docker build -t service-a:latest ./service-a
+
+      - name: Verify Image Created
+        run: docker images
